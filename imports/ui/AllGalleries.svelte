@@ -12,7 +12,7 @@
   });
 
   let name = "";
-  let searchTags = "";
+  let searchText = "";
 
   async function handleCreate(event) {
     name = _.trim(name)
@@ -20,13 +20,13 @@
     try {
       await Galleries.insert({
         name,
-        searchTags,
+        searchText,
         createdAt: new Date()
       });
 
       // Clear form
       name = "";
-      searchTags = "";
+      searchText = "";
     } catch (error) {
       console.log(error)
     }
@@ -41,7 +41,7 @@
       <tr>
         <th>_id</th>
         <th>name</th>
-        <th>searchTags</th>
+        <th>searchText</th>
         <th>createdAt</th>
       </tr>
     </thead>
@@ -49,7 +49,7 @@
     <tr>
       <td class="pe-4">{ galleries._id.toHexString() }</td>
       <td class="pe-4">{ galleries.name }</td>
-      <td class="pe-4">{ galleries.searchTags}</td>
+      <td class="pe-4">{ galleries.searchText}</td>
       <td class="pe-4">{ galleries.createdAt }</td>
     </tr>
   {/each}
@@ -64,8 +64,8 @@
 
     <input
       type="text"
-      placeholder="searchTags"
-      bind:value={searchTags}
+      placeholder="searchText"
+      bind:value={searchText}
     />
 
     <input type="submit" class="btn btn-secondary btn-sm"/>

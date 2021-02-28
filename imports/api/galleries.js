@@ -24,12 +24,12 @@ if (Meteor.isServer) {
             method: 'flickr.photos.search',
             api_key: process.env.FLICKR_KEY,
             format: 'json',
-            tags: gallery.searchTags,
-            sort: 'interestingness-desc',
+            text: gallery.searchText,
+            sort: 'relevance',
             privacy_filter: 1, // public only
             media: 'photos',
             content_type: 1, // no screenshots
-            extras: 'description,license,date_upload,date_taken,owner_name,icon_server,machine_tags,tags,geo,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
+            extras: 'description,license,date_upload,date_taken,owner_name,icon_server,tags,geo,o_dims,path_alias,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
             per_page: 100,
             page
           }

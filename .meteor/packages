@@ -23,3 +23,4 @@ svelte:compiler
 rdb:svelte-meteor-data
 static-html
 percolate:migrations
+session
