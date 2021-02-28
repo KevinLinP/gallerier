@@ -25,16 +25,24 @@ if (Meteor.isServer) {
             api_key: process.env.FLICKR_KEY,
             format: 'json',
             tags: gallery.searchTags,
+            sort: 'interestingness-desc',
+            privacy_filter: 1, // public only
             media: 'photos',
             content_type: 1, // no screenshots
             extras: 'description,license,date_upload,date_taken,owner_name,icon_server,machine_tags,tags,geo,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
-            per_page: 5,
+            per_page: 100,
             page
           }
         })
 
         const searchResult = response.data
         const matches = responseRegex.exec(searchResult)
+
+        if (!matches) {
+          console.log(searchResult)
+          return
+        }
+
         const responseData = JSON.parse(matches[1])
 
         GallerySearchResponses.upsert(
@@ -46,14 +54,13 @@ if (Meteor.isServer) {
         )
 
         const photos = responseData.photos.photo
-        console.log(photos)
         photos.forEach((photo) => {
           flickrId = photo.id
           delete photo.id
 
           Photos.upsert(
             {galleryId, flickrId},
-            {$set: Object.assign(photo, {searchedAt: now})}
+            {$set: {flickrData: photo, searchedAt: now}}
           )
         })
       } catch (error) {

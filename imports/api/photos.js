@@ -4,3 +4,6 @@ import { initCollection } from './common.js'
 
 export const Photos = initCollection('photos')
 
+if (Meteor.isServer) {
+  Meteor.publish('photos', () => Photos.find())
+}
