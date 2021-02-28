@@ -12,6 +12,10 @@
   });
 
   $: gallery = useTracker(() => Galleries.findOne({name: 'Sunsets'}));
+
+  function handleSearch() {
+    Meteor.call('galleries.search', $gallery._id)
+  }
 </script>
 
 
@@ -19,3 +23,4 @@
   <h1>{ $gallery?.name }</h1>
 </div>
 
+<button on:click={handleSearch}>Search</button>
