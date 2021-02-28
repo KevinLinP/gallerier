@@ -1,5 +1,21 @@
 <script>
-  let hi = 'Sunsets'
+  import { useTracker } from 'meteor/rdb:svelte-meteor-data';
+  import { Galleries } from '../api/galleries.js'
+  import { Meteor } from "meteor/meteor";
+  import { onMount } from 'svelte';
+
+  // from router
+  export let location
+
+  onMount(async () => {
+    Meteor.subscribe('galleries');
+  });
+
+  $: gallery = useTracker(() => Galleries.findOne({name: 'Sunsets'}));
 </script>
 
-<h1> { hi }</h1>
+
+<div class="container">
+  <h1>{ $gallery?.name }</h1>
+</div>
+
