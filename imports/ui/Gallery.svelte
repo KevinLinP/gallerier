@@ -18,9 +18,11 @@
 
   let currentIndex = useSession('currentIndex', 0)
 
-  $: gallery = useTracker(() => Galleries.findOne({name: 'Sunset Clouds'}))
-  $: photos = useTracker(() => Photos.find({}, {limit: 50}).fetch())
+  $: gallery = useTracker(() => Galleries.findOne({}))
+  $: photos = useTracker(() => Photos.find({}).fetch())
   $: currentPhoto = $photos[$currentIndex]
+  $: nextPhoto = $photos[$currentIndex + 1]
+  $: nextNextPhoto = $photos[$currentIndex + 2]
   $: console.log($currentIndex, $photos, currentPhoto)
 
   function handleSearch() {
@@ -54,6 +56,18 @@
     }
   }
 
+  function skipToFirstUnrated() {
+    let index = -1
+    let photo
+
+    do {
+      index += 1
+      photo = $photos[index]
+    } while (photo.rating)
+
+    Session.set('currentIndex', index)
+  }
+
   /* <div> */
   /*   <button class="btn btn-dark" on:click={handleSearch}>Search</button> */
   /* </div> */
@@ -68,11 +82,38 @@
   /* </div> */
 </script>
 
-<div class="container">
+<style>
+  .photo-preload {
+    height: 0;
+    overflow: hidden;
+  }
+</style>
+
+{#if currentPhoto?.rating}
+  <button class="btn text-muted" on:click={skipToFirstUnrated}>skip to first unrated</button>
+{/if}
+
+<div class="container-fluid">
   <div class="mb-5">
-  {#if currentPhoto}
-    <Photo photo={currentPhoto} />
-  {/if}
+  {#each $photos as photo (photo.flickrId)}
+    {#if photo == currentPhoto}
+      <div class="mb-5">
+        <Photo photo={photo} />
+      </div>
+    {/if}
+
+    {#if photo == nextPhoto}
+      <div class="photo-preload">
+        <Photo photo={photo} />
+      </div>
+    {/if}
+
+    {#if photo == nextNextPhoto}
+      <div class="photo-preload">
+        <Photo photo={photo} />
+      </div>
+    {/if}
+  {/each}
   </div>
 </div>
 
