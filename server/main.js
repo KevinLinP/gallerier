@@ -25,7 +25,10 @@ Migrations.add({
 });
 
 Meteor.startup(() => {
-  // Accounts.config({forbidClientAccountCreation: true})
+  // meteor shell
+  // https://docs.meteor.com/api/passwords.html#Accounts-createUser
+  Accounts.config({forbidClientAccountCreation: true})
+
   Migrations.migrateTo('latest');
 });
 

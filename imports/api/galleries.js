@@ -14,11 +14,14 @@ if (Meteor.isServer) {
 
   Meteor.methods({
     async 'galleries.search'(galleryId) {
+      if (!this.userId) { return 'not logged in' }
+
       const now = new Date()
       const gallery = Galleries.findOne(galleryId)
-      const page = 1
+      const page = 2
 
       try {
+        // https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html
         const response = await axios.get('https://www.flickr.com/services/rest/', {
           params: {
             method: 'flickr.photos.search',
@@ -28,6 +31,7 @@ if (Meteor.isServer) {
             sort: 'relevance',
             privacy_filter: 1, // public only
             media: 'photos',
+            license: '2,4,7,8,9,10',
             content_type: 1, // no screenshots
             extras: 'description,license,date_upload,date_taken,owner_name,icon_server,tags,geo,o_dims,path_alias,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
             per_page: 500,

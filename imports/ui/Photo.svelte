@@ -10,6 +10,7 @@
   $: flickrData = photo.flickrData
   $: url = flickrData.url_o || flickrData.url_l || flickrData.url_m
   $: rating = photo.rating || null
+  $: flickrUrl = `https://www.flickr.com/photos/${flickrData.pathalias}/${photo.flickrId}`
 
   function handleStarClick(num) {
     Photos.update(photo._id, {$set: {rating: num}})
@@ -32,11 +33,18 @@
 
 <style>
   .photo-container {
-    margin-top: 5vh;
+    margin-top: 1vh;
   }
 
   .photo {
     max-height: 90vh;
+  }
+
+  .hidden-until-hover {
+    opacity: 0;
+  }
+  .hidden-until-hover:hover {
+    opacity: 1;
   }
 </style>
 
@@ -57,4 +65,6 @@
   </div>
 </div>
 
-
+<div class="hidden-until-hover d-flex justify-content-end mt-3">
+  <a href={flickrUrl} target="_blank">{ flickrUrl }</a>
+</div>

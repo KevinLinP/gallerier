@@ -23,7 +23,7 @@
   $: currentPhoto = $photos[$currentIndex]
   $: nextPhoto = $photos[$currentIndex + 1]
   $: nextNextPhoto = $photos[$currentIndex + 2]
-  $: console.log($currentIndex, $photos, currentPhoto)
+  $: console.log($currentIndex, currentPhoto)
 
   function handleSearch() {
     Meteor.call('galleries.search', $gallery._id)
@@ -42,6 +42,7 @@
     const key = event.key
 
     if (numberKeys.includes(key)) {
+      if (!Meteor.user) { return }
       const num = parseInt(key)
       Photos.update(currentPhoto._id, {$set: {rating: num}})
       next()
@@ -87,6 +88,13 @@
     height: 0;
     overflow: hidden;
   }
+
+  .hidden-until-hover {
+    opacity: 0;
+  }
+  .hidden-until-hover:hover {
+    opacity: 1;
+  }
 </style>
 
 {#if currentPhoto?.rating}
@@ -94,6 +102,10 @@
 {/if}
 
 <div class="container-fluid">
+  <div class="hidden-until-hover d-flex justify-content-end">
+    { $currentIndex } / { $photos.length }
+  </div>
+
   <div class="mb-5">
   {#each $photos as photo (photo.flickrId)}
     {#if photo == currentPhoto}
